@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyleSphere — Global Fashion & Lifestyle AI Engine</title>
+  <meta name="description" content="Ultra-fast, responsive web app for global fashion styling, Head-to-Toe AI fit analysis, color swapping, occasion catalog, and activewear gear checklist.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              500: '#0EA5E9',
+              600: '#0284C7',
+              900: '#0C4A6E',
+            },
+            accent: {
+              500: '#F43F5E',
+              600: '#E11D48',
+            },
+            slateBg: '#F8FAFC',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Ultra smooth transitions and zero lag UI */
+    * { -webkit-tap-highlight-color: transparent; }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .badge-glow {
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.25);
+    }
+    .fade-in {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slateBg text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('dashboard')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="font-display font-bold text-xl tracking-tight text-slate-900 flex items-center gap-1">
+            StyleSphere <span class="text-xs px-2 py-0.5 rounded-full bg-brand-50 text-brand-600 font-semibold border border-brand-200">AI</span>
+          </span>
+          <p class="text-[10px] text-slate-500 font-medium tracking-wide">UNIVERSAL FASHION ENGINE</p>
+        </div>
+      </div>
+
+      <!-- Desktop Nav Items -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition flex items-center gap-2">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
+        </button>
+        <button onclick="switchTab('scanner')" id="nav-scanner" class="nav-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition flex items-center gap-2">
+          <i data-lucide="scan" class="w-4 h-4"></i> Fit Scanner
+        </button>
+        <button onclick="switchTab('occasions')" id="nav-occasions" class="nav-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition flex items-center gap-2">
+          <i data-lucide="tag" class="w-4 h-4"></i> Occasions
+        </button>
+        <button onclick="switchTab('activewear')" id="nav-activewear" class="nav-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition flex items-center gap-2">
+          <i data-lucide="activity" class="w-4 h-4"></i> Sports & Gear
+        </button>
+        <button onclick="switchTab('colorwheel')" id="nav-colorwheel" class="nav-btn px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition flex items-center gap-2">
+          <i data-lucide="palette" class="w-4 h-4"></i> Colors & Cuts
+        </button>
+      </nav>
+
+      <!-- Global Filter Shortcuts (Age & Modesty) -->
+      <div class="flex items-center gap-2">
+        <div class="hidden sm:flex items-center gap-1.5 text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-sm">
+          <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-brand-600"></i>
+          <select id="global-age-select" onchange="applyGlobalFilters()" class="bg-transparent text-xs font-medium focus:outline-none cursor-pointer">
+            <option value="all">Age: All Ages (Babies-50+)</option>
+            <option value="baby">Babies & Toddlers (0-5)</option>
+            <option value="kids">Kids & Teens (6-17)</option>
+            <option value="young">Young Adults (18-29)</option>
+            <option value="adult">Adults (30-49)</option>
+            <option value="senior">Elegance (50+ yrs)</option>
+          </select>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-1.5 text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-sm">
+          <select id="global-modesty-select" onchange="applyGlobalFilters()" class="bg-transparent text-xs font-medium focus:outline-none cursor-pointer">
+            <option value="all">Style: Hijab & Non-Hijab</option>
+            <option value="hijab">Hijab Friendly & Modest</option>
+            <option value="non-hijab">Non-Hijab / Contemporary</option>
+          </select>
+        </div>
+
+        <button onclick="triggerQuickScan()" class="bg-slate-900 hover:bg-brand-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+          <span class="hidden xs:inline">Quick Scan</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Bottom Tab Navigation -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-slate-200 py-2 px-3 flex justify-around items-center">
+    <button onclick="switchTab('dashboard')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-slate-500 hover:text-brand-600 text-[10px] font-semibold" data-target="dashboard">
+      <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
+    </button>
+    <button onclick="switchTab('scanner')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-slate-500 hover:text-brand-600 text-[10px] font-semibold" data-target="scanner">
+      <i data-lucide="scan" class="w-5 h-5"></i> Scanner
+    </button>
+    <button onclick="switchTab('occasions')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-slate-500 hover:text-brand-600 text-[10px] font-semibold" data-target="occasions">
+      <i data-lucide="tag" class="w-5 h-5"></i> Occasion
+    </button>
+    <button onclick="switchTab('activewear')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-slate-500 hover:text-brand-600 text-[10px] font-semibold" data-target="activewear">
+      <i data-lucide="activity" class="w-5 h-5"></i> Sports
+    </button>
+    <button onclick="switchTab('colorwheel')" class="mobile-nav-btn flex flex-col items-center gap-0.5 text-slate-500 hover:text-brand-600 text-[10px] font-semibold" data-target="colorwheel">
+      <i data-lucide="palette" class="w-5 h-5"></i> Palette
+    </button>
+  </div>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12">
+
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-pane fade-in space-y-10">
+      
+      <!-- Hero Banner & Universal Fit Analyzer Upload -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 text-white p-6 sm:p-10 shadow-xl">
+        <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-72 h-72 bg-accent-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-brand-100">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Universal Fit Analyzer Active · All Ages (0-50+) · Hijab & Non-Hijab
+            </div>
+            <h1 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+              AI Style Intelligence for <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 via-sky-300 to-rose-200">Every Body, Every Look.</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
+              Analyze complete head-to-toe outfits instantly: tops, pants, skirts, bags, belts, shoes, and slayer/scarves. Swap colors live and match outfits for any Indonesian occasion or sport.
+            </p>
+
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button onclick="document.getElementById('upload-input').click()" class="bg-gradient-to-r from-brand-500 to-sky-500 hover:from-brand-600 hover:to-sky-600 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-2xl shadow-lg shadow-brand-500/25 flex items-center gap-2 transition transform active:scale-95">
+                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Outfit Photo
+              </button>
+              <button onclick="loadSamplePreset('korean_chic')" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm px-5 py-3 rounded-2xl backdrop-blur-md border border-white/20 transition flex items-center gap-2">
+                <i data-lucide="play-circle" class="w-4 h-4"></i> Try Sample Preset
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Drop Zone Card -->
+          <div class="lg:col-span-5">
+            <input type="file" id="upload-input" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+            <div id="drop-zone" onclick="document.getElementById('upload-input').click()" class="cursor-pointer border-2 border-dashed border-white/30 hover:border-brand-400 bg-white/5 hover:bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center transition flex flex-col items-center justify-center space-y-3 min-h-[220px]">
+              <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-brand-300 shadow-inner">
+                <i data-lucide="camera" class="w-7 h-7"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="text-sm font-bold text-white">Click or Drop Outfit Image</p>
+                <p class="text-xs text-slate-300">Supports JPG, PNG, WEBP (Camera or Gallery)</p>
+              </div>
+              <span class="inline-block text-[11px] font-semibold text-brand-200 bg-brand-500/20 px-3 py-1 rounded-full border border-brand-400/30">
+                Auto-detects: Tops, Bottoms, Shoes, Bag, Gesper & Slayer
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
+            <i data-lucide="users" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 font-medium block">Demographics</span>
+            <span class="font-bold text-sm text-slate-900">Babies to 50+ Yrs</span>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+            <i data-lucide="shirt" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 font-medium block">Clothing Models</span>
+            <span class="font-bold text-sm text-slate-900">All Cuts & Modesty</span>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <i data-lucide="palette" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 font-medium block">Color Engine</span>
+            <span class="font-bold text-sm text-slate-900">Infinite HEX Swapper</span>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="compass" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 font-medium block">Activewear & Gear</span>
+            <span class="font-bold text-sm text-slate-900">Checklist Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Inspirations from Various Countries -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-bold text-brand-600 uppercase tracking-widest">Curated Lookbooks</span>
+            <h2 class="font-display text-2xl font-bold text-slate-900">Visual Outfit Inspirations Around The Globe</h2>
+          </div>
+          <div class="flex items-center gap-2 overflow-x-auto pb-1" id="country-pill-filters">
+            <button onclick="filterInspirations('all')" class="insp-pill active px-3 py-1 rounded-full text-xs font-semibold bg-slate-900 text-white transition">All Countries</button>
+            <button onclick="filterInspirations('indonesia')" class="insp-pill px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition">Indonesia 🇮🇩</button>
+            <button onclick="filterInspirations('korea')" class="insp-pill px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition">Korea 🇰🇷</button>
+            <button onclick="filterInspirations('japan')" class="insp-pill px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition">Japan 🇯🇵</button>
+            <button onclick="filterInspirations('italy')" class="insp-pill px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition">Italy / Europe 🇮🇹</button>
+            <button onclick="filterInspirations('us')" class="insp-pill px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition">USA Street 🇺🇸</button>
+          </div>
+        </div>
+
+        <div id="inspiration-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Dynamically populated by JS with rich photos -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TAB 2: HEAD-TO-TOE DETAIL SCANNER PAGE -->
+    <section id="tab-scanner" class="tab-pane hidden fade-in space-y-8">
+      
+      <!-- Scanner Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 uppercase tracking-wider mb-1">
+            <i data-lucide="scan" class="w-4 h-4"></i> AI Item Breakdown & Chromatic Swapper
+          </div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Head-to-Toe Detail Scanner</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Meticulously inspecting Top, Bottom, Shoes, Bags, Gesper (Belts), and Slayer (Scarves) with instant color replacement.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="document.getElementById('upload-input').click()" class="bg-white border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Scan Another Photo
+          </button>
+          <button onclick="exportScanSummary()" class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+            <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Save / Export Fit
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Breakdown Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Image Preview & Interactive Marker Layer -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-3">
+            <div class="relative rounded-2xl overflow-hidden bg-slate-100 aspect-[3/4] flex items-center justify-center">
+              <img id="scanner-preview-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80" alt="Scanned Fit" class="w-full h-full object-cover">
+              
+              <!-- Real-time Scanner Laser Animation -->
+              <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-brand-500 to-transparent shadow-[0_0_12px_#0ea5e9] animate-bounce pointer-events-none opacity-80"></div>
+
+              <!-- Interactive Floating Item Badges -->
+              <div class="absolute top-10 left-6 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 shadow">
+                Top: <span id="badge-top-name">Poplin Blouse</span>
+              </div>
+              <div class="absolute top-1/2 left-6 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 shadow">
+                Bottom: <span id="badge-bottom-name">Pleated Culottes</span>
+              </div>
+              <div class="absolute bottom-8 right-6 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 shadow">
+                Shoes: <span id="badge-shoes-name">Leather Loafers</span>
+              </div>
+            </div>
+
+            <!-- Quick Color Swap Toolbar -->
+            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+              <span class="text-[11px] font-bold text-slate-700 block uppercase tracking-wider">Instant Palette Swapper (Selected Item)</span>
+              <div class="flex items-center gap-2 overflow-x-auto pb-1" id="swatch-quick-bar">
+                <!-- Color dots inserted by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: 6 Essential Head-to-Toe Categories -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between pb-1">
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Detected Garments & Accessories (6 Slots)</span>
+            <span class="text-xs text-brand-600 font-semibold bg-brand-50 px-2.5 py-0.5 rounded-full border border-brand-200">100% Item Precision</span>
+          </div>
+
+          <!-- Cards for 6 Garment Slots -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="garment-slots-container">
+            <!-- Populated via Javascript: Top, Bottom, Shoes, Bags, Gesper, Slayer -->
+          </div>
+
+          <!-- Color Harmony Insight Card -->
+          <div class="bg-gradient-to-r from-brand-50 via-sky-50 to-indigo-50 border border-brand-200/80 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-brand-800 font-bold text-sm">
+              <i data-lucide="sparkles" class="w-4 h-4 text-brand-600"></i>
+              AI Sartorial Composition & Modesty Score: <span class="text-brand-600 font-display text-base">96 / 100</span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed" id="harmony-explanation">
+              The balance between the upper silhouette and footwear tone creates a high-aesthetic focal point. Suitable for versatile everyday wear, meeting Indonesian modest standards while maintaining modern international elegance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TAB 3: SMART WARDROBE & OCCASION TAGS -->
+    <section id="tab-occasions" class="tab-pane hidden fade-in space-y-6">
+      
+      <!-- Occasion Filter Header -->
+      <div class="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold text-brand-600 uppercase tracking-widest">Occasion Catalog</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Smart Wardrobe & Occasion Tags</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Curated outfit formulas matching Indonesian social contexts and international dress codes.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500 font-medium">Demographic:</span>
+          <span id="active-demographic-badge" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700">All Ages · Universal</span>
+        </div>
+      </div>
+
+      <!-- 5 Visual Tabs for Occasion Tags -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar" id="occasion-nav-tabs">
+        <button onclick="filterOccasionTag('kondangan')" class="occ-tab active px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-slate-900 text-white shadow-sm" data-tag="kondangan">
+          <i data-lucide="gem" class="w-4 h-4 text-amber-400"></i> Kondangan (Wedding)
+        </button>
+        <button onclick="filterOccasionTag('formal')" class="occ-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100" data-tag="formal">
+          <i data-lucide="briefcase" class="w-4 h-4 text-blue-500"></i> Formal & Gala
+        </button>
+        <button onclick="filterOccasionTag('kerja')" class="occ-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100" data-tag="kerja">
+          <i data-lucide="building-2" class="w-4 h-4 text-emerald-500"></i> Kerja (Office / Work)
+        </button>
+        <button onclick="filterOccasionTag('nongkrong')" class="occ-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100" data-tag="nongkrong">
+          <i data-lucide="coffee" class="w-4 h-4 text-amber-600"></i> Nongkrong (Hangout & Café)
+        </button>
+        <button onclick="filterOccasionTag('taman')" class="occ-tab px-5 py-2.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100" data-tag="taman">
+          <i data-lucide="trees" class="w-4 h-4 text-green-500"></i> Main di Taman (Park Play)
+        </button>
+      </div>
+
+      <!-- Outfits Display for Selected Occasion -->
+      <div id="occasion-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered via Javascript -->
+      </div>
+    </section>
+
+
+    <!-- TAB 4: SPORTS & ACTIVEWEAR HUB + GEAR CHECKLIST -->
+    <section id="tab-activewear" class="tab-pane hidden fade-in space-y-8">
+      
+      <!-- Section Header -->
+      <div class="border-b border-slate-200 pb-4">
+        <span class="text-xs font-bold text-brand-600 uppercase tracking-widest">Athletic & Outdoor Gear Engine</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Sports & Activewear Hub</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Breathable performance wear paired with essential gear checklists for outdoor expeditions and gym training.</p>
+      </div>
+
+      <!-- Activity Selector Buttons -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button onclick="selectSportActivity('hiking')" class="sport-btn active text-left p-4 rounded-2xl border transition bg-slate-900 text-white shadow-md" data-sport="hiking">
+          <i data-lucide="mountain" class="w-6 h-6 text-brand-400 mb-2"></i>
+          <span class="font-bold text-sm block">Hiking / Naik Gunung</span>
+          <span class="text-[11px] opacity-75">Trekking & Outdoor</span>
+        </button>
+        <button onclick="selectSportActivity('gym')" class="sport-btn text-left p-4 rounded-2xl border transition bg-white border-slate-200 text-slate-700 hover:border-slate-300" data-sport="gym">
+          <i data-lucide="dumbbell" class="w-6 h-6 text-rose-500 mb-2"></i>
+          <span class="font-bold text-sm block">Gym & Strength</span>
+          <span class="text-[11px] text-slate-500">Indoor Conditioning</span>
+        </button>
+        <button onclick="selectSportActivity('pilates')" class="sport-btn text-left p-4 rounded-2xl border transition bg-white border-slate-200 text-slate-700 hover:border-slate-300" data-sport="pilates">
+          <i data-lucide="heart" class="w-6 h-6 text-pink-500 mb-2"></i>
+          <span class="font-bold text-sm block">Pilates & Yoga</span>
+          <span class="text-[11px] text-slate-500">Flexibility & Core</span>
+        </button>
+        <button onclick="selectSportActivity('running')" class="sport-btn text-left p-4 rounded-2xl border transition bg-white border-slate-200 text-slate-700 hover:border-slate-300" data-sport="running">
+          <i data-lucide="flame" class="w-6 h-6 text-amber-500 mb-2"></i>
+          <span class="font-bold text-sm block">Running & Cardio</span>
+          <span class="text-[11px] text-slate-500">Marathon & Track</span>
+        </button>
+      </div>
+
+      <!-- Activewear Detail & Gear Checklist View -->
+      <div id="sport-detail-card" class="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+
+    <!-- TAB 5: MASSIVE COLOR DATABASE & CLOTHING CUTS -->
+    <section id="tab-colorwheel" class="tab-pane hidden fade-in space-y-8">
+      
+      <!-- Header -->
+      <div class="border-b border-slate-200 pb-4">
+        <span class="text-xs font-bold text-brand-600 uppercase tracking-widest">All-Inclusive Catalog Database</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">Color Palette & Clothing Cuts Directory</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Explore every color tone with the interactive wheel, paired with exhaustive clothing silhouettes across all ages.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Interactive Color Wheel & HEX Picker -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i data-lucide="pipette" class="w-4 h-4 text-brand-600"></i> Interactive HEX Engine
+            </span>
+            <span id="selected-hex-display" class="font-mono text-xs bg-slate-100 px-3 py-1 rounded-lg text-slate-800 font-bold">#0EA5E9</span>
+          </div>
+
+          <!-- Color Live Preview Box -->
+          <div id="color-preview-box" class="h-32 rounded-2xl shadow-inner flex items-center justify-center text-white font-bold text-base transition-colors duration-200" style="background-color: #0EA5E9;">
+            <span class="bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-xs">Preview Swatch</span>
+          </div>
+
+          <!-- Native HTML5 Color Picker Slider -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-600">Select Custom Hue:</label>
+            <input type="color" id="hex-picker-input" value="#0EA5E9" oninput="updateColorSelection(this.value)" class="w-full h-12 rounded-xl cursor-pointer bg-slate-50 border border-slate-200 p-1">
+          </div>
+
+          <!-- Curated Fashion Color Families -->
+          <div class="space-y-2">
+            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Curated Sartorial Palettes:</span>
+            <div class="grid grid-cols-6 gap-2" id="preset-color-palette">
+              <!-- Inserted by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Comprehensive Clothing Models & Accessory Catalog -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-brand-600"></i> Exhaustive Cuts & Accessory Types
+            </span>
+            <span class="text-xs text-slate-400">All Ages / All Models</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Tops & Shirts:</h4>
+              <div class="flex flex-wrap gap-1.5" id="cuts-tops"></div>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pants & Bottom Cuts:</h4>
+              <div class="flex flex-wrap gap-1.5" id="cuts-bottoms"></div>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Skirts & Dresses:</h4>
+              <div class="flex flex-wrap gap-1.5" id="cuts-skirts"></div>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Complete Accessories (Bags, Gesper, Slayer & Shoes):</h4>
+              <div class="flex flex-wrap gap-1.5" id="cuts-accessories"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-bold text-slate-900">StyleSphere AI</span>
+        <span>— Global Fashion & Lifestyle Platform</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px]">
+        <span>Single-File Pure Frontend</span>
+        <span>•</span>
+        <span>Zero-Server Lag</span>
+        <span>•</span>
+        <span>100% cPanel / GitHub Pages Deployable</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

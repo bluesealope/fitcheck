@@ -1,114 +1,63 @@
-# FITCHECK — Personal Fashion Analyzer & Digital Wardrobe
+# StyleSphere — Global Fashion & Lifestyle AI Web Application
 
-> **"Discover Your Style. Define Your Look."**
-
-FITCHECK adalah aplikasi web **Fashion Technology** inklusif untuk laki-laki (*Men*) dan perempuan (*Women* — mendukung penuh *Hijab*, *Non-Hijab*, dan *Flexible*) yang dirancang dengan estetika **Editorial Luxury Fashion Magazine** (`#F7F5F0` Ivory, `#E8E0D5` Warm Beige, `#252525` Charcoal, `#A58E79` Taupe, serta tipografi **Playfair Display** & **Inter**).
-
-Proyek ini dibangun sebagai produk digital *full-stack* yang siap digunakan dan dipresentasikan untuk **Proyek Akhir TKJ**.
+> **Universal Fit Analyzer & Sartorial Lifestyle Engine for All Ages (Babies to 50+), All Genders, and Modesty Preferences (Hijab & Non-Hijab).**
 
 ---
 
-## Fitur Utama (15 Spesifikasi Lengkap)
+## 🌟 Key Features
 
-1. **Personalization Setup (Tanpa Login Email/Password)**:
-   - Pemilihan profil *Laki-laki (Men)* atau *Perempuan (Women)* dengan kartu visual editorial seimbang.
-   - Pemilihan umur **13–50 tahun** (dilengkapi slider, dropdown, dan matriks angka).
-   - Pemilihan *multi-style* dari katalog 49+ gaya fashion.
-   - Preferensi tambahan (*Hijab*, *Non-Hijab*, *Flexible / No Preference*) untuk perempuan dan kebebasan lintas-kategori penuh untuk semua gender.
-   - Persistensi otomatis berbasis **Anonymous User ID** (`localStorage` + sinkronisasi **Supabase PostgreSQL RLS**), lengkap dengan fitur **Edit Fashion Profile** dan **Reset Profile**.
-2. **Fashion Analyzer (Men & Women)**:
-   - Unggah foto outfit dari kamera atau galeri, atau uji cepat dengan preset editorial *Men* & *Women* (termasuk *Hijab*).
-   - Ekstraksi warna piksel nyata menggunakan HTML5 Canvas & deteksi kategori pakaian lengkap (*T-shirt, Shirt, Polo, Hoodie, Sweater, Jacket, Blazer, Suit, Dress, Skirt, Jeans, Trousers, Hijab, Loafers, Heels, Sneakers, Watches, Bags, Jewelry, Accessories*).
-   - Penilaian terukur **0–100** dengan bobot:
-     - **Color Harmony**: 30%
-     - **Outfit Combination**: 30%
-     - **Style Consistency**: 25%
-     - **Accessories Match**: 15%
-   - Mendukung **AI Vision API** (`/api/analyze-outfit` dengan Google Gemini Vision / OpenAI Vision) serta **Rule-Based Sartorial & Pixel Engine** yang jujur apabila API key belum dikonfigurasi.
-3. **Complete Fashion Style Library**:
-   - **14 Kelompok Gaya** (*Classic & Elegant, Minimalist, Casual, Streetwear, Feminine, Masculine, Vintage, Alternative, Artistic, Modern, Korean & Japanese, Sporty, Formal, Modest Fashion*) dengan referensi visual pria & wanita serta fitur **Create Custom Style**.
-4. **Personal Color Analysis**:
-   - **Personal Color Quiz** & **Photo-Based Color Assessment** (dengan penjelasan transparansi pencahayaan kamera).
-   - Menentukan **Warm, Cool, atau Neutral Undertone** beserta **12 Seasonal Color Palettes** (*Light/Warm/Bright Spring, Light/Cool/Soft Summer, Soft/Warm/Deep Autumn, Bright/Cool/Deep Winter*), saran warna pakaian, dan saran warna hijab.
-5. **Complete Color Library**:
-   - **11 Keluarga Warna** (*Neutral, Brown, Red, Pink, Orange, Yellow, Green, Blue, Purple, Grey, Monochrome*), *Interactive Color Picker*, pencarian HEX, filter undertone, *Favorite Colors*, dan pembuatan *Custom Color*.
-6. **Digital Wardrobe**:
-   - CRUD penuh (*Add, Upload Photo, Edit, Delete, Search, Filter Category/Color/Style*) untuk 8 kategori: *Tops, Bottoms, Outerwear, Dresses, Shoes, Bags, Accessories, Hijab*.
-7. **Outfit Generator (Mix & Match Studio)**:
-   - Merakit outfit secara cerdas maupun manual **100% dari pakaian yang dimiliki pengguna di Digital Wardrobe**, difilter berdasarkan aktivitas, acara, style, dan warna, serta menyimpan *Favorite Outfits*.
-8. **Style Recommendation Engine**:
-   - Rekomendasi dinamis berdasarkan profil gender, umur, gaya favorit, undertone, seasonal palette, warna favorit, preferensi hijab/non-hijab, koleksi *Digital Wardrobe*, acara, dan aktivitas harian.
-9. **Outfit Planner**:
-   - Kalender interaktif bulanan untuk menjadwalkan outfit berdasarkan tanggal, nama acara, koleksi pakaian, dan catatan styling.
-10. **Fashion History**:
-    - Menyimpan riwayat lengkap hasil analisis foto outfit, skor 0–100, rincian rekomendasi, lihat detail laporan, dan hapus riwayat.
+1. **Responsive Web Dashboard**:
+   - Ultra-fast, zero-lag UI with adaptive layout for mobile phones, tablets, and desktop monitors.
+   - **Universal Fit Analyzer** drop zone with one-click photo upload (Camera & Gallery).
+   - Global visual outfit inspirations curated from Indonesia 🇮🇩, Korea 🇰🇷, Japan 🇯🇵, Italy 🇮🇹, and USA 🇺🇸.
 
----
+2. **Head-to-Toe Detail Scanner**:
+   - Meticulous AI breakdown of 6 essential slots:
+     - **Top** (Cut, fabric, and color tone)
+     - **Bottom** (Pants / skirt silhouette)
+     - **Shoes** (Footwear style)
+     - **Bags** (Totes, clutches, crossbody)
+     - **Belts / Gesper** (Slim, formal, woven)
+     - **Scarves / Slayer** (Silk slayers, pashmina, neck bandanas)
+   - **Instant Color Swapper**: Swap colors on any detected item in real-time.
 
-## Tech Stack
+3. **Smart Wardrobe & Occasion Tags**:
+   - Curated Indonesian and international occasion formulas:
+     - **Kondangan** (Traditional & modern wedding attire)
+     - **Formal** (Gala, black-tie, academic events)
+     - **Kerja** (Creative & corporate office wear)
+     - **Nongkrong** (Café, street, and casual meetups)
+     - **Main di Taman** (Breezy family park play & stroller-friendly outfits for toddlers & parents)
 
-- **Framework**: Next.js 14 (App Router) + TypeScript
-- **Styling & Editorial UI**: Tailwind CSS + Google Fonts (`Playfair Display` & `Inter`) + Lucide React Icons
-- **Database & Storage**: Supabase PostgreSQL + Supabase Storage + Hybrid Local Persistence
-- **Backend API**: Next.js Route Handlers (`/api/analyze-outfit`)
+4. **Sports & Activewear Hub**:
+   - Dedicated athletic modules:
+     - **Hiking / Naik Gunung** (Trail trekking)
+     - **Gym & Strength** (Weightlifting & cardio)
+     - **Pilates & Yoga** (Core & mobility)
+     - **Running & Marathon** (Track & road)
+
+5. **Activity Detail & Gear Checklist**:
+   - Interactive equipment checklist (e.g. trekking poles, daypacks, raincoat, water bladder, lifting belts, yoga mats).
+   - Check off gear interactively as you pack for your adventure!
+
+6. **All-Inclusive Database & Interactive HEX Color Wheel**:
+   - Interactive color wheel slider & HEX code engine.
+   - Curated catalog of all cuts for Tops, Bottoms, Skirts, and complete Accessories.
 
 ---
 
-## Cara Instalasi & Menjalankan di Lokal
+## 🚀 How to Run & Deploy (100% Non-Vercel)
 
-1. **Clone atau buka direktori proyek**:
-   ```bash
-   cd kassss
-   ```
+This application is built as a **pure lightweight standalone web app** (Zero Server Dependencies):
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### 1. Run Locally on Your Laptop
+Simply double click `index.html` or open it in Google Chrome, Microsoft Edge, or Mozilla Firefox.
 
-3. **Konfigurasi Environment Variables (Opsional untuk Cloud Sync & AI Vision)**:
-   Salin `.env.example` menjadi `.env.local`:
-   ```bash
-   cp .env.example .env.local
-   ```
-   > **Catatan**: Tanpa mengisi `.env.local`, seluruh fitur aplikasi tetap berjalan 100% menggunakan *Anonymous Device Persistence* dan *Rule-Based Sartorial & Pixel Engine*.
+### 2. Deploy to GitHub Pages (Free Web Hosting)
+1. Push `index.html` and `app.js` to your GitHub repository `bluesealope/fitcheck` (or `bluesealope/stylesphere`).
+2. Go to **Repository Settings > Pages**.
+3. Under **Build and deployment > Source**, select **Deploy from a branch** and choose **`main` / (root)**.
+4. Click **Save**. Your website will be live in 60 seconds at `https://bluesealope.github.io/fitcheck/`!
 
-4. **Jalankan server development**:
-   ```bash
-   npm run dev
-   ```
-   Buka `http://localhost:3000` di browser.
-
----
-
-## Konfigurasi Database Supabase (PostgreSQL & RLS)
-
-1. Buat project baru di [Supabase](https://supabase.com).
-2. Buka menu **SQL Editor** di dashboard Supabase.
-3. Salin seluruh isi file [`supabase/schema.sql`](./supabase/schema.sql) dan klik **Run**.
-   - Script ini otomatis membuat 11 tabel: `profiles`, `wardrobe_items`, `outfit_analyses`, `saved_outfits`, `outfit_plans`, `style_catalog`, `color_catalog`, `seasonal_palettes`, `user_color_profiles`, `user_style_preferences`, dan `style_recommendations`.
-   - Mengaktifkan **Row Level Security (RLS)** menggunakan header `x-anonymous-user-id` sehingga data setiap pengguna anonim terisolasi dengan aman tanpa pernah mengekspos `SUPABASE_SERVICE_ROLE_KEY` di frontend.
-4. Salin `Project URL` dan `anon public key` dari **Project Settings > API** ke `.env.local`:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   ```
-
----
-
-## Konfigurasi AI Vision API (Opsional)
-
-Untuk mengaktifkan analisis berbasis LLM Vision di `/api/analyze-outfit`:
-- Isi `GEMINI_API_KEY` (Google AI Studio) atau `OPENAI_API_KEY` pada `.env.local`.
-- Jika dikosongkan, FITCHECK secara jujur menampilkan label **`Rule-Based Sartorial & Pixel Engine (Honest Fallback)`** dan tetap mengevaluasi komposisi warna piksel serta harmoni pakaian secara akurat.
-
----
-
-## Cara Deployment ke Vercel
-
-1. Push repository ini ke **GitHub**.
-2. Buka [Vercel](https://vercel.com) dan klik **Add New Project**.
-3. Import repository GitHub **FITCHECK**.
-4. Pada bagian **Environment Variables**, tambahkan variabel dari `.env.example` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `GEMINI_API_KEY` jika digunakan).
-5. Klik **Deploy**. Aplikasi siap diakses secara publik!
-
+### 3. Deploy to Standard cPanel / Hostinger
+Upload `index.html` and `app.js` directly into your `public_html` folder via File Manager or FTP. It runs immediately without Node.js or server configurations.
